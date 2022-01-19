@@ -1,0 +1,30 @@
+{
+  "name": "lupus2.0",
+  "version": "1.0.0",
+  "description": "Lupus in tabula game",
+  "main": "index.js",
+  "type": "module",
+  "dependencies": {
+    "bufferutil": "^4.0.6",
+    "express": "^4.17.2",
+    "socket.io": "^4.4.1",
+    "utf-8-validate": "^5.0.8"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/G-Altieri/Lupus2.0.git"
+  },
+  "author": "Bronz",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/G-Altieri/Lupus2.0/issues"
+  },
+  "homepage": "https://github.com/G-Altieri/Lupus2.0#readme"
+}
