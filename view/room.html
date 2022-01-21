@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Room lupus</title>
+    <script src="https://cdn.socket.io/4.4.1/socket.io.min.js" integrity="sha384-fKnu0iswBIqkjxrhQCTZ7qlLHOFEgNkRmK2vaO/LbTZSXdJfAu6ewRBdwHPhBo/H" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <!-- <script src="/view/client.js"></script> -->
+</head>
+<body>
+    <center>
+    <!-- <div id="idRoom"></div> -->
+
+    <input type="text" class="form-control" id="nickname" placeholder="nickname"  />
+    <input type="button" class="btn btn-primary " id="entra" value="Entra" />
+    <input type="button" class="btn btn-primary hidden" id="disconettiti" value="Disconettiti" />
+
+
+    <div id="ListPlayer"></div>
+</center>
+
+</body>
+<script>
+  jQuery(function () {
+
+  var socket = io();
+  var nickname;
+
+  //Read room
+  const queryString = window.location.href;
+  console.log(queryString);
+  const room = queryString.substring(queryString.lastIndexOf("room/")+5);
+
+  /*Connection with server*/
+  console.log("Client Ready");
+  socket.on('connect', () => { console.log("Server Connected"); })
+
+
+  $('#entra').on('click', function () {
+    joinInRoom();
+  });
+
+
+  //Room
+  function joinInRoom(){
+    nickname = jQuery('#nickname').val();
+
+    socket.emit("join", {roomID: room, nickname: nickname });
+    console.log("Join in room: " + room);
+    changeView(['entra', 'nickname'], ['disconettiti','ListPlayer']);
+  }
+
+  function changeView(x, k) {
+    for (i = 0; i < x.length; i++) {
+      $('#' + x[i]).addClass("hidden");
+    }
+    for (i = 0; i < k.length; i++) {
+      $('#' + k[i]).removeClass("hidden");
+    }
+
+  }
+
+  jQuery('#disconettiti').on('click', function () {
+    //socket.disconnect();
+    socket.emit("left room");
+    console.log("Left to room: " + room);
+    changeView(['disconettiti','ListPlayer'], ['entra', 'nickname']);
+  });
+
+
+  socket.on("UsersInRoom", (dataSocket) => {
+    // console.log(dataSocket);
+    var users = "";
+    if (dataSocket != undefined) {
+      dataSocket.forEach(x => {
+        users = users + "<br>" + x.nickname;
+      });
+    }
+
+    $('#ListPlayer').html(users);
+  });
+
+});
+</script>
+<style>
+    .hidden{
+        display: none;
+    }
+</style>
+</html>
