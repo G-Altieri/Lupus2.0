@@ -11,11 +11,7 @@
 </head>
 <body>
     <center>
-       
-    
-    
     <input type="button" class="btn btn-primary " id="unisciti" value="Unisciti" />
-  
     <input type="button" class="btn btn-primary " id="crea" value="Crea" />
     <input type="text" class="form-control hidden" id="inputCodiceStanza" placeholder="Codice Stanza"  />
     <input type="button" class="btn btn-primary hidden" id="btnCodiceStanza" value="Entra" />
@@ -23,15 +19,29 @@
 
 </body>
 <script>
+  //Button for Code Room
     $('#unisciti').on('click', function () {
     changeView(['unisciti', 'crea'], ['inputCodiceStanza', 'btnCodiceStanza']);
   });
-  $('#crea').on('click', function () {
-   //changeView(['unisciti', 'crea'], ['inputCodiceStanza', 'btnCodiceStanza']);
-  });
+  //Button Enter Code Room
   $('#btnCodiceStanza').on('click', function () {
-    window.location.replace('room/' + $('#inputCodiceStanza').val());
+    window.location.replace('room/' + $('#inputCodiceStanza').val().toLowerCase());
 });
+//Button Create Room
+$('#crea').on('click', function () {
+    $.ajax({
+    url: "/newRoom",
+    type: "GET",
+    dataType: "text",
+        success: function(response, status, http) {
+            if (response) {
+                console.log("RoomCode: "+response);
+                window.location.replace('room/' + response);
+            }
+        }
+      });
+  });
+
 function changeView(x, k) {
     for (i = 0; i < x.length; i++) {
       $('#' + x[i]).addClass("hidden");
