@@ -30,6 +30,7 @@ io.on("connection", (socket) => {
     socket.on('add nickname', (data) => {
         if (adminRoom[socket.data.roomID] == null) {
             adminRoom[socket.data.roomID] = data.nickname;
+            console.log(data.nickname+" e l admin di : "+ adminRoom[socket.data.roomID]);
         }
         socket.data.nickname = data.nickname;
         console.log(" add nickname:" + socket.data.nickname);
@@ -85,7 +86,6 @@ function changeAdmin(room, nick) {
             adminRoom[room] = clientRoom.data.nickname;
         }
     } else {
-        console.log("Ehi");
         var clientRoom = allClients.find(element => { return element.data.roomID == room && element.data.nickname == nick })
         console.log(clientRoom);
         if (clientRoom != undefined) {

@@ -97,8 +97,83 @@ jQuery(function () {
     }
   }
 
-  
+  //Alert before Reload
+  /*window.onbeforeunload = function(e){
+    console.log(e);
+    alert('Thanks And Bye!');
+    return 'Sei sicuro di Uscire?';
+  };*/
     //function OhAdmin(){}
+
+
+
+
+  //ANIMATION
+  //  Titolo Lupus
+  var textWrapper = document.querySelector('.ml9 .letters');
+  textWrapper.innerHTML = textWrapper.textContent.replace(/\S/g, "<span class='letter'>$&</span>");
+
+  //For la mandria
+  var textWrapper = document.querySelector('.ml12');
+  textWrapper.innerHTML = textWrapper.textContent.replace(/\S/g, "<span class='letter'>$&</span>");
+
+
+  anime.timeline({
+    loop: false
+  }) /*Title*/
+    .add({
+      targets: '.ml9 .letter',
+      scale: [0, 1],
+      duration: 1500,
+      elasticity: 600,
+      delay: (el, i) => 45 * (i + 1)
+    })
+    
+    /*BG*/
+    .add({
+      targets: '#bg',
+      translateX: '-50%',
+      translateY: [-60, 0],
+      opacity: [0, 1],
+      easing: "easeOutExpo",
+      duration: 1000,
+      delay: 0,
+      begin: function () {
+        $('#bg').removeClass("opacity0");
+      },
+    }, '1500')
+
+    /*Mandria*/
+    .add({
+      targets: '.ml12 .letter',
+      scale: [14, 1],
+      opacity: [0, 1],
+      easing: "easeOutCirc",
+      duration: 400,
+      delay: (el, i) => 400 * i,
+      begin: function () {
+        $('.ml12').removeClass("opacity0");
+      },
+    }, '1000')
+
+    /*Foglia*/
+    .add({
+      targets: '.iconLeaf',
+      translateX: [60, 0],
+      translateZ: 0,
+      rotate: '50deg',
+      opacity: [0, 1],
+      easing: "easeOutExpo",
+      duration: 2000,
+      delay: 0,
+      begin: function () {
+        $('.iconLeaf').removeClass("opacity0");
+      },
+    }, '1500')
+
+
+
+
 });///$
 
 
