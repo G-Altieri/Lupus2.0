@@ -40,7 +40,7 @@
 <body>
 
 
-    <div class="container">
+    <div class="container mx-auto">
 
 
         <!-- Title Game -->
@@ -54,26 +54,58 @@
         <i class="fas fa-cannabis iconLeaf opacity0"></i>
 
 
+        <!-- Alert Message Home Game-->
+        <div id="error" class="alert fs-3 invisible text-white alert-danger"></div>
 
-        <center>
-            <!-- <div id="idRoom"></div> -->
 
-            <input type="text" class="form-control" id="nickname" placeholder="nickname" />
+        <!-- Input NickName -->
+        <input type="text" class="form-control w-75 mx-auto" id="nickname" placeholder="nickname" />
+        <div class="d-flex justify-content-center mt-5">
             <input type="button" class="btn btn-primary " id="entra" value="Entra" />
-            <input type="button" class="btn btn-primary hidden" id="disconettiti" value="Disconettiti" />
-            <div id="admin" class=""></div>
+        </div>
 
-            <div id="listPlayer"></div>
-            <br>
-            <br>
-            <br>
-            <input type="text" class="form-control hidden" id="admin1" placeholder="cambia admin" />
-            <input type="button" class="btn btn-primary hidden" id="admin2" value="cambia" />
+        <!-- Button Disconnettiti e admin -->
+        <div class="mx-auto">
+            <!-- <input type="button" class="btn btn-primary hidden" id="disconettiti" value="Disconettiti" /> -->
+            <!-- <br>
+        <br>
+        <br>
+        <input type="text" class="form-control hidden" id="admin1" placeholder="cambia admin" />
+        <input type="button" class="btn btn-primary hidden" id="admin2" value="cambia" /> -->
 
 
 
-        </center>
 
+
+            <!-- Numero Giocatori -->
+            <div class="numplayer fs-3 hidden" id="numPlayers">
+            </div>
+            <!-- Entrata in lobby -->
+            <div id="lobby" class=" app-panel text-white hidden">
+                <div class="panel2 text-center">
+                    <div class="panel-body fs-2">
+                        <ul id="players"></ul>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Button Inizia ADMIN-->
+            <center>
+                <input type="button" id="btnStartGame" value="INIZIA" class="btn btn-primary mt-5 hidden" />
+            </center>
+
+
+
+
+            <!-- Progess Spinener Lobby-->
+            <div id="progress" class="text-center hidden">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+
+        </div>
 
 
         <!-- BG -->

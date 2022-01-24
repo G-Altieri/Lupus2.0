@@ -22,7 +22,7 @@
   <!-- BOOTSTRAP 5 -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
-  <link rel="stylesheet" href="./room/bootstrap.css">
+
 
   <!-- FONT -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
@@ -33,6 +33,7 @@
   <link rel="icon" href="./room/assets/img/favicon.png">
 
   <!-- CSS -->
+  <link rel="stylesheet" href="./room/bootstrap.css">
   <link rel="stylesheet" href="./room/style.css">
 
 </head>
@@ -53,19 +54,31 @@
 
 
     <center>
-      <input type="button" class="btn btn-primary btn-lg " id="unisciti" value="Unisciti" />
-      <br>
-      <br>
+      <!-- Alert Message Home Game-->
+      <div id="error" class="alert fs-3 invisible text-white alert-danger">Non ci sono stanza libere</div>
+
+      <!-- Button Unisciti e crea-->
       <div>
+        <input type="button" class="btn btn-primary btn-lg " id="unisciti" value="Unisciti" />
+        <br>
+        <br>
         <input type="button" class="btn btn-success btn-sm " id="crea" value="Crea" />
       </div>
-      <input type="text" class="form-control hidden" id="inputCodiceStanza" placeholder="Codice Stanza" />
-      <input type="button" class="btn btn-primary hidden" id="btnCodiceStanza" value="Entra" />
+
+      <!-- Select Codice Stanza -->
+      <div>
+        <select class="form-select form-select-lg mb-3 hidden" aria-label="Seleziona una stanza"
+          id="selectCodiceStanza">
+          <option selected value="0">Seleziona una stanza</option>
+          <option value="1">Casetta</option>
+          <option value="2">Mandria</option>
+          <option value="3">Pianezza</option>
+        </select>
+        <br>
+        <input type="button" class="btn btn-primary hidden" id="btnCodiceStanza" value="Entra" />
+      </div>
     </center>
   </div>
-
-
-
 
   <!-- BG -->
   <img src="./room/assets/img/bg.jpg" alt="" class="img opacity0" id="bg">
@@ -84,11 +97,28 @@
 <script>
   //Button for Code Room
   $('#unisciti').on('click', function () {
-    changeView(['unisciti', 'crea'], ['inputCodiceStanza', 'btnCodiceStanza']);
+    changeView(['unisciti', 'crea','error'], ['selectCodiceStanza', 'btnCodiceStanza']);
   });
   //Button Enter Code Room
   $('#btnCodiceStanza').on('click', function () {
-    window.location.replace('room/' + $('#inputCodiceStanza').val().toLowerCase());
+    var x;
+    console.log($('#selectCodiceStanza').val());
+    switch ($('#selectCodiceStanza').val()) {
+      case "1":
+        x = "casetta";
+        break;
+      case "2":
+        x = "mandria";
+        break;
+      case "3":
+        x = "pianezza";
+        break;
+        case "0":
+        x = false;
+        break;
+    }
+    if(x)
+      window.location.replace('room/' + x);
   });
   //Button Create Room
   $('#crea').on('click', function () {
@@ -97,9 +127,12 @@
       type: "GET",
       dataType: "text",
       success: function (response, status, http) {
-        if (response) {
+        if (response && response != "full") {
           console.log("RoomCode: " + response);
           window.location.replace('room/' + response);
+        }else{
+          $('#error').removeClass("invisible");
+          console.log("RoomCode: " + response);
         }
       }
     });
@@ -117,10 +150,10 @@
 
 
   /*Blocco tasto destro mouse*/
-function blocco_mousedx() {
+  function blocco_mousedx() {
     return (false);
-}
-document.oncontextmenu = blocco_mousedx;
+  }
+  document.oncontextmenu = blocco_mousedx;
 
   //ANIMATION
   //  Titolo Lupus

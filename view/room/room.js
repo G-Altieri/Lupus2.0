@@ -5,6 +5,7 @@ jQuery(function () {
   var socket = io();
   var nickname;
   var admin;
+  var numPlayer;
 
   //Read room
   const queryString = window.location.href;
@@ -18,22 +19,26 @@ jQuery(function () {
     socket.emit("join", { roomID: room });
   });
 
-  //Join in Room
+  //Sent Nickname
   $('#entra').on('click', function () {
-    joinInRoom();
+    addNickname();
   });
-
-  //Room
-  function joinInRoom() {
+  function addNickname() {
     nickname = jQuery('#nickname').val();
     socket.emit("add nickname", { nickname: nickname });
-    console.log("Join in room: " + room);
-    changeView(['entra', 'nickname'], ['disconettiti', 'ListPlayer']);
   }
 
 
+  //Join in Room
+  socket.on("add nickname ok", (x) => {
+    joinInRoom();
+  });
+  function joinInRoom() {
+    console.log("Join in room: " + room);
+    changeView(['entra', 'nickname'], ['disconettiti', 'lobby','numPlayers','progress']);
+  }
 
-  //Event
+
 
   //Button Disconettiti
   $('#disconettiti').on('click', function () {
@@ -44,35 +49,29 @@ jQuery(function () {
     window.location.replace('/');
   });
 
-    //Button Change Admin
-    $('#admin2').on('click', function () {
-      var x=$('#admin1').val();
-      socket.emit("change admin",{room:room, admin:x});
-      console.log("change admin " + x);
-    });
+  //Button Change Admin
+  $('#admin2').on('click', function () {
+    var x = $('#admin1').val();
+    socket.emit("change admin", { room: room, admin: x });
+    console.log("change admin " + x);
+  });
 
-  //Listen
+
 
   //List of Users
   socket.on("UsersInRoom", (dataSocket) => {
-    var users = "";
-    admin=dataSocket[0].admin;
-    dataSocket=dataSocket.slice(1);
-    if (dataSocket != undefined) {
-      dataSocket.forEach(x => {
-        //Set Admin
-        if (admin == x.nickname) {
-          setAdmin();
-        }
-        if (x.nickname == nickname && admin != nickname) {
-          users = users + "<br>" + '<div style="color:green;">' + x.nickname + "</div>";
-        }
-        if (x.nickname != nickname && admin != x.nickname) {
-          users = users + "<br>" + x.nickname;
-        }
-      });
-    }
-    $('#listPlayer').html(users);
+    admin = dataSocket[0].admin;
+    console.log("admin "+admin);
+    dataSocket = dataSocket.slice(1);
+    numPlayer = dataSocket.length;
+    setAdmin(dataSocket);
+  });
+
+
+  //Error 
+  socket.on("error", (err) => {
+    console.log(err);
+    errorView(true, err);
   });
 
 
@@ -86,15 +85,51 @@ jQuery(function () {
     }
   }
 
-
-  function setAdmin() {
-    if (admin == nickname){
-      $('#admin').html('<div style="color:green;">' + admin + "</div>" + "<hr>");
-      changeView('', ['admin1', 'admin2']);
-    }else{
-      $('#admin').html(admin + "<hr>");
-      changeView(['admin1', 'admin2'], '');
+  function errorView(view, err) {
+    if (view) {
+      $('#error').removeClass("invisible");
+      $('#error').html(err);
+    } else {
+      $('#error').addClass("invisible");
+      $('#error').html("");
     }
+  }
+
+  function setAdmin(dataSocket) {
+    if (admin == nickname) {
+      var users = "";
+      if (dataSocket != undefined) {
+        dataSocket.forEach(x => {
+          if (x.nickname === nickname)
+            users = users + '<li class="bg-success">' + x.nickname + '</li>';
+          else
+            users = users + '<li>' + x.nickname + '<a class="mx-3" style="color:red; id="'+x.nickname+'">     X</a>' +'</li>';
+        });
+      }
+      $('#players').html(users);
+      $('#numPlayers').html("Player: "+numPlayer);
+      changeView('', ['btnStartGame']);
+    } else {
+      changeView(['btnStartGame'], '');
+      listPlayer(dataSocket);
+    }
+  }
+
+  $('#players').on("click", "li a", e => console.log(e.attr('id')));
+
+
+  function listPlayer(dataSocket){
+    var users = "";
+    if (dataSocket != undefined) {
+      dataSocket.forEach(x => {
+        if (x.nickname === nickname)
+          users = users + '<li class="bg-success">' + x.nickname + '</li>';
+        else
+          users = users + '<li>' + x.nickname + '</li>';
+      });
+    }
+    $('#players').html(users);
+    $('#numPlayers').html("Player: "+numPlayer);
   }
 
   //Alert before Reload
@@ -103,7 +138,7 @@ jQuery(function () {
     alert('Thanks And Bye!');
     return 'Sei sicuro di Uscire?';
   };*/
-    //function OhAdmin(){}
+  //function OhAdmin(){}
 
 
 
@@ -128,7 +163,7 @@ jQuery(function () {
       elasticity: 600,
       delay: (el, i) => 45 * (i + 1)
     })
-    
+
     /*BG*/
     .add({
       targets: '#bg',
