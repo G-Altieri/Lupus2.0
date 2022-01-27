@@ -24,21 +24,25 @@ io.on("connection", (socket) => {
     socket.on('join', (data) => {
         socket.data.roomID = data.roomID.replace('/', '');
         socket.join(socket.data.roomID);
-        console.log(" join in room:" + socket.data.roomID);
+        console.log("New Socket join in room:" + socket.data.roomID);
     });
     //Listen for add nickname
     socket.on('add nickname', (data) => {
-        var k = allClients.find(element => { return element.data.nickname == data.nickname });
         var x = false;
-        if (k != undefined)
-            if (k.data.nickname == data.nickname)
-                emitError("Nickname gia utilizzato, cambiarlo");
+        let regx = /^[a-zA-Z0-9]+$/;
+        if (regx.test(data.nickname)) {
+            var k = allClients.find(element => { return element.data.nickname == data.nickname });
+            if (k != undefined)
+                if (k.data.nickname == data.nickname)
+                    emitError("Nickname gia utilizzato, cambiarlo");
+                else
+                    x = true;
+
             else
                 x = true;
-
-        else
-            x = true;
-
+        } else {
+            emitError("Inserisci un Nickname Valido");
+        }
         //Add nickname
         if (x) {
             if (adminRoom[socket.data.roomID] == null) {
@@ -46,7 +50,7 @@ io.on("connection", (socket) => {
                 console.log(data.nickname + " e l admin di : " + adminRoom[socket.data.roomID]);
             }
             socket.data.nickname = data.nickname;
-            console.log(" add nickname:" + socket.data.nickname);
+            console.log("Add nickname:" + socket.data.nickname);
             listUsersInRoom(socket.data.roomID);
             socket.emit("add nickname ok", "ok");
         }
@@ -81,6 +85,26 @@ io.on("connection", (socket) => {
         controllEmptyRoom(socket.data.roomID);
         listUsersInRoom(socket.data.roomID);
     });
+    //Listen for kick player ;
+    socket.on("kick", (x) => {
+        var y = allClients.find(element => { return element.data.roomID == x.room.replace('/', '') && element.data.nickname == x.nickname })
+        if (y != undefined) {
+            y.leave(y.data.roomID);
+            y.emit("kicked");
+            console.log(y.data.nickname + ' kick in room: ' + y.data.roomID);
+            removeClient(y);
+            controllEmptyRoom(y.data.roomID);
+            listUsersInRoom(y.data.roomID);
+        }
+    });
+
+
+    //Listen Init Game
+    socket.on("initGame", (x) => {
+        io.to(x.room.replace('/', '')).emit("initGame", {});
+    });
+
+
 
     //Gestion Error
     function emitError(err) {
@@ -122,10 +146,10 @@ function changeAdmin(room, nick) {
 async function listUsersInRoom(x) {
     const sockets = await io.in(x).fetchSockets();
     var dataSocket = [];
-    console.log("Passo qeusto admin "+adminRoom[x]);
     dataSocket.push({ admin: adminRoom[x] });
     for (const socket of sockets) {
-        dataSocket.push(socket.data);
+        if (socket.data.nickname != undefined)
+            dataSocket.push(socket.data);
     }
     io.to(x).emit("UsersInRoom", dataSocket);
 }
@@ -170,7 +194,7 @@ function controllEmptyRoom(x) {
                 roomCodeUsed.splice(i, 1);
             }
             console.log("La stanza: " + x + " torna libera");
-            adminRoom[x]=null;
+            adminRoom[x] = null;
         }
 
     }

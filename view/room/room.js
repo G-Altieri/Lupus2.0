@@ -28,40 +28,20 @@ jQuery(function () {
     socket.emit("add nickname", { nickname: nickname });
   }
 
-
   //Join in Room
   socket.on("add nickname ok", (x) => {
     joinInRoom();
   });
   function joinInRoom() {
+    errorView(false);
     console.log("Join in room: " + room);
-    changeView(['entra', 'nickname'], ['disconettiti', 'lobby','numPlayers','progress']);
+    changeView(['entra', 'nickname'], ['disconettiti', 'lobby', 'numPlayers', 'progress']);
   }
-
-
-
-  //Button Disconettiti
-  $('#disconettiti').on('click', function () {
-    //socket.disconnect();
-    socket.emit("left room");
-    console.log("Left to room: " + room);
-    changeView(['disconettiti', 'ListPlayer'], ['entra', 'nickname']);
-    window.location.replace('/');
-  });
-
-  //Button Change Admin
-  $('#admin2').on('click', function () {
-    var x = $('#admin1').val();
-    socket.emit("change admin", { room: room, admin: x });
-    console.log("change admin " + x);
-  });
-
-
 
   //List of Users
   socket.on("UsersInRoom", (dataSocket) => {
     admin = dataSocket[0].admin;
-    console.log("admin "+admin);
+    //console.log("admin " + admin);
     dataSocket = dataSocket.slice(1);
     numPlayer = dataSocket.length;
     setAdmin(dataSocket);
@@ -75,7 +55,43 @@ jQuery(function () {
   });
 
 
+  //kick player
+  $('#players').on("click", "li .fa-sign-out-alt ", e => {
+    console.log(e);
+    if (confirm("Cacciare " + e.currentTarget.id + " ?")) {
+      socket.emit("kick", { nickname: e.currentTarget.id, room: room })
+    }
+  });
+  //I m kicked
+  socket.on("kicked", (dataSocket) => {
+    console.log("kicked by room: " + room);
+    changeView(['disconettiti', 'ListPlayer'], ['entra', 'nickname']);
+    window.location.replace('/');
+  });
+
+
+  //Change Admin
+  $('#players').on("click", "li .fa-crown ", e => {
+    if (confirm("" + e.currentTarget.id + " sara il nuovo Admin")) {
+      socket.emit("change admin", { room: room, admin: e.currentTarget.id });
+      console.log("change admin " + e.currentTarget.id);
+    }
+  });
+
+  //Start GAME
+  $('#btnInitGame').on("click", function () {
+    socket.emit("initGame", {room:room});
+    changeView(['btnInitGame','progress'], '');
+  });
+
+   //Listen Init Game
+   socket.on("initGame", (x) => {
+   console.log("Init Game");
+   changeView(['progress'], '');
+});
+
   //Function Usefull
+  //Change View 
   function changeView(x, k) {
     for (i = 0; i < x.length; i++) {
       $('#' + x[i]).addClass("hidden");
@@ -84,7 +100,7 @@ jQuery(function () {
       $('#' + k[i]).removeClass("hidden");
     }
   }
-
+  //View Error
   function errorView(view, err) {
     if (view) {
       $('#error').removeClass("invisible");
@@ -94,7 +110,7 @@ jQuery(function () {
       $('#error').html("");
     }
   }
-
+  //Render Admin
   function setAdmin(dataSocket) {
     if (admin == nickname) {
       var users = "";
@@ -103,22 +119,20 @@ jQuery(function () {
           if (x.nickname === nickname)
             users = users + '<li class="bg-success">' + x.nickname + '</li>';
           else
-            users = users + '<li>' + x.nickname + '<a class="mx-3" style="color:red; id="'+x.nickname+'">     X</a>' +'</li>';
+            users = users + '<li class="position-relative"><i class="fa fa-crown position-absolute m-2 pe-auto" style="color:#f6ff00; left:50px;" id="' + x.nickname + '"></i>' + x.nickname + '<i class="fa fa-sign-out-alt position-absolute m-2" style="color:red; right:50px;"  id="' + x.nickname + '" ></i>' + '</li>';
         });
       }
       $('#players').html(users);
-      $('#numPlayers').html("Player: "+numPlayer);
-      changeView('', ['btnStartGame']);
+      $('#numPlayers').html("Player: " + numPlayer);
+      changeView('', ['btnInitGame']);
     } else {
-      changeView(['btnStartGame'], '');
+      changeView(['btnInitGame'], '');
       listPlayer(dataSocket);
     }
   }
 
-  $('#players').on("click", "li a", e => console.log(e.attr('id')));
-
-
-  function listPlayer(dataSocket){
+  //Player List
+  function listPlayer(dataSocket) {
     var users = "";
     if (dataSocket != undefined) {
       dataSocket.forEach(x => {
@@ -129,16 +143,8 @@ jQuery(function () {
       });
     }
     $('#players').html(users);
-    $('#numPlayers').html("Player: "+numPlayer);
+    $('#numPlayers').html("Player: " + numPlayer);
   }
-
-  //Alert before Reload
-  /*window.onbeforeunload = function(e){
-    console.log(e);
-    alert('Thanks And Bye!');
-    return 'Sei sicuro di Uscire?';
-  };*/
-  //function OhAdmin(){}
 
 
 
@@ -210,6 +216,31 @@ jQuery(function () {
 
 
 });///$
+
+
+
+
+/*
+  //Button Disconettiti
+  $('#disconettiti').on('click', function () {
+    //socket.disconnect();
+    socket.emit("left room");
+    console.log("Left to room: " + room);
+    changeView(['disconettiti', 'ListPlayer'], ['entra', 'nickname']);
+    window.location.replace('/');
+  });
+*/
+
+
+
+  //Alert before Reload
+/*window.onbeforeunload = function(e){
+  console.log(e);
+  alert('Thanks And Bye!');
+  return 'Sei sicuro di Uscire?';
+};*/
+  //function OhAdmin(){}
+
 
 
 

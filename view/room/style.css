@@ -166,18 +166,18 @@ body {
 }
 
 
- .form-control {
+ .form-control, .form-select {
     color: rgb(255, 255, 255);
     background-color: rgb(0, 0, 0);
     border: 2px solid rgb(0, 184, 15);
 }
 
-.form-control:focus {
+.form-control:focus, .form-select:active{
     color: #ffffff !important;
     background-color: rgb(0, 0, 0) !important;
     border-color: #ecf017 !important;
 } 
-.form-control:active {
+.form-control:active, .form-select:active{
     color: #ffffff !important;
     background-color: rgb(0, 0, 0) !important;
     border-color: #ecf017 !important;
@@ -190,7 +190,15 @@ textarea:-webkit-autofill:hover,
 textarea:-webkit-autofill:focus,
 .form-control:-webkit-autofill,
 .form-control:-webkit-autofill:hover,
-.form-control:-webkit-autofill:focus {
+.form-control:-webkit-autofill:focus, 
+.form-select:-webkit-autofill:focus,
+.form-select:-webkit-autofill,
+.form-select:-webkit-autofill:hover 
+{
     -webkit-text-fill-color: rgb(255, 255, 255);
     transition: background-color 5000s ease-in-out 0s;
+}
+
+.fa{
+    cursor: pointer;
 }

@@ -22,7 +22,7 @@
     <!-- BOOTSTRAP 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
-    <link rel="stylesheet" href="./bootstrap.css">
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> -->
 
     <!-- FONT -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
@@ -33,6 +33,7 @@
     <link rel="icon" href="./assets/img/favicon.png">
 
     <!-- CSS -->
+    <link rel="stylesheet" href="./bootstrap.css">
     <link rel="stylesheet" href="./style.css">
 
 </head>
@@ -61,7 +62,7 @@
         <!-- Input NickName -->
         <input type="text" class="form-control w-75 mx-auto" id="nickname" placeholder="nickname" />
         <div class="d-flex justify-content-center mt-5">
-            <input type="button" class="btn btn-primary " id="entra" value="Entra" />
+            <input type="button" class="btn btn-primary" id="entra" value="Entra" />
         </div>
 
         <!-- Button Disconnettiti e admin -->
@@ -92,10 +93,8 @@
 
             <!-- Button Inizia ADMIN-->
             <center>
-                <input type="button" id="btnStartGame" value="INIZIA" class="btn btn-primary mt-5 hidden" />
+                <input type="button" id="btnInitGame" value="INIZIA" class="btn btn-success mt-5  btn-lg hidden" style='background-color:#4f0097; border-color: #4f0097;' />
             </center>
-
-
 
 
             <!-- Progess Spinener Lobby-->
