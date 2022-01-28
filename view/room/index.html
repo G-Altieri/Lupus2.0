@@ -11,23 +11,18 @@
     <meta name="author" content="@ElTronk">
 
     <!-- Socket IO -->
-    <script src="https://cdn.socket.io/4.4.1/socket.io.min.js"
-        integrity="sha384-fKnu0iswBIqkjxrhQCTZ7qlLHOFEgNkRmK2vaO/LbTZSXdJfAu6ewRBdwHPhBo/H"
-        crossorigin="anonymous"></script>
+    <script src="https://cdn.socket.io/4.4.1/socket.io.min.js" integrity="sha384-fKnu0iswBIqkjxrhQCTZ7qlLHOFEgNkRmK2vaO/LbTZSXdJfAu6ewRBdwHPhBo/H" crossorigin="anonymous">
+    </script>
 
     <!-- JQUERY -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
-        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 
     <!-- BOOTSTRAP 5 -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
     <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> -->
 
     <!-- FONT -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
-        integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w=="
-        crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" />
 
     <!---ICON-->
     <link rel="icon" href="./assets/img/favicon.png">
@@ -43,14 +38,12 @@
 
     <div class="container mx-auto">
 
-
         <!-- Title Game -->
         <h1 class="ml9">
             <span class="text-wrapper text-white text-center">
                 <span class="letters">Lupus in Tabula</span>
             </span>
         </h1>
-
         <h1 class="ml12 text-white opacity0">La Mandria </h1>
         <i class="fas fa-cannabis iconLeaf opacity0"></i>
 
@@ -60,51 +53,50 @@
 
 
         <!-- Input NickName -->
-        <input type="text" class="form-control w-75 mx-auto" id="nickname" placeholder="nickname" />
-        <div class="d-flex justify-content-center mt-5">
-            <input type="button" class="btn btn-primary" id="entra" value="Entra" />
+        <div id="inputNickName">
+            <input type="text" class="form-control w-75 mx-auto fs-1" style="padding: 2rem; " id="nickname" placeholder="nickname" />
+            <div class="d-flex justify-content-center mt-5">
+                <input type="button" class="btn btn-primary fs-1" id="entra" value="Entra" />
+            </div>
         </div>
 
-        <!-- Button Disconnettiti e admin -->
-        <div class="mx-auto">
-            <!-- <input type="button" class="btn btn-primary hidden" id="disconettiti" value="Disconettiti" /> -->
-            <!-- <br>
-        <br>
-        <br>
-        <input type="text" class="form-control hidden" id="admin1" placeholder="cambia admin" />
-        <input type="button" class="btn btn-primary hidden" id="admin2" value="cambia" /> -->
+        <!-- Numero Giocatori -->
+        <div class="numplayer fs-3 hidden" id="numPlayers"> </div>
 
-
-
-
-
-            <!-- Numero Giocatori -->
-            <div class="numplayer fs-3 hidden" id="numPlayers">
-            </div>
-            <!-- Entrata in lobby -->
-            <div id="lobby" class=" app-panel text-white hidden">
-                <div class="panel2 text-center">
-                    <div class="panel-body fs-2">
-                        <ul id="players"></ul>
-                    </div>
+        <!-- Lobby Player View -->
+        <div id="lobby" class=" app-panel text-white hidden">
+            <div class="panel2 text-center">
+                <div class="panel-body fs-1">
+                    <p id="inGameAdmin" class="hidden"></p>
+                    <div class="new1 my-4 hidden" id="trAdmin"></div>
+                    <ul id="players"></ul>
                 </div>
             </div>
+        </div>
 
+        <!-- Admin view button init-->
+        <center>
+            <input type="button" id="btnInitGame" value="inizia" class="btn btn-success mt-5  btn-lg hidden" style='background-color:#4f0097; border-color: #4f0097;' />
+        </center>
 
-            <!-- Button Inizia ADMIN-->
+        <!-- Progess Spinener Lobby-->
+        <div id="progress" class="text-center hidden">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+
+        <!-- View Admin in Game -->
+        <div id="adminView" class="hidden">
+            <!-- Admin Ruoli -->
+            <div class="numplayer fs-3 mt-5 " id="numRuoli">Ruoli ...</div>
+
+            <!-- Button End Game -->
             <center>
-                <input type="button" id="btnInitGame" value="INIZIA" class="btn btn-success mt-5  btn-lg hidden" style='background-color:#4f0097; border-color: #4f0097;' />
+                <input type="button" id="btnEndGame" value="Termina" class="btn btn-success mt-5  btn-lg " style='background-color:#4f0097; border-color: #4f0097;' />
             </center>
-
-
-            <!-- Progess Spinener Lobby-->
-            <div id="progress" class="text-center hidden">
-                <div class="spinner-border text-primary" role="status">
-                    <span class="visually-hidden">Loading...</span>
-                </div>
-            </div>
-
         </div>
+
 
 
         <!-- BG -->
