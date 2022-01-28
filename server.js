@@ -137,6 +137,39 @@ io.on("connection", (socket) => {
     });
 
 
+    //Generate ruoli
+    socket.on("generate ruoli", async(ruoli) => {
+        //Selected Ruoli
+        var ruoliSelect = [];
+        for (var key in ruoli) {
+            for (var i = 0; i < ruoli[key]; i++) {
+                ruoliSelect.push(key);
+            }
+        }
+
+        //Generazione numeri random
+        var number = []; //Varibile per randomizare univocamente
+        while (number.length < ruoliSelect.length) {
+            var r = Math.floor(Math.random() * ruoliSelect.length);
+            if (number.indexOf(r) === -1) number.push(r);
+        }
+
+        //Randomize Ruoli
+        var listTemp = [];
+        for (var i in number) {
+            listTemp[number[i]] = ruoliSelect[i];
+        }
+
+        var players = await listUsersInRoom(socket.data.roomID, true);
+        console.log(players)
+        console.log("Ruoli generati per la room: " + socket.data.roomID);
+        io.to(socket.data.roomID).emit("ruoli generati ok", {
+            ruoli: listTemp,
+            players: players
+        });
+
+    });
+
     //Gestion Error
     function emitError(err) {
         socket.emit("error", err);
@@ -182,12 +215,12 @@ function changeAdmin(room, nick) {
     } else {
         console.log(room + " non c e un admin valido");
         adminRoom[room] = null;
-        endGame(room);
+        //endGame(room);
         listUsersInRoom(room);
     }
 }
 //List User in room
-async function listUsersInRoom(x) {
+async function listUsersInRoom(x, ret) {
     const sockets = await io.in(x).fetchSockets();
     var dataSocket = [];
     dataSocket.push({
@@ -197,7 +230,10 @@ async function listUsersInRoom(x) {
         if (socket.data.nickname != undefined)
             dataSocket.push(socket.data);
     }
-    io.to(x).emit("UsersInRoom", dataSocket);
+    if (ret)
+        return dataSocket;
+    else
+        io.to(x).emit("UsersInRoom", dataSocket);
 }
 
 //Random Code Room

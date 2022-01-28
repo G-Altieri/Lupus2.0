@@ -89,12 +89,174 @@
         <!-- View Admin in Game -->
         <div id="adminView" class="hidden">
             <!-- Admin Ruoli -->
-            <div class="numplayer fs-3 mt-5 " id="numRuoli">Ruoli ...</div>
+            <div class="numplayer fs-3 mt-5 " id="numRuoli">Ruoli</div>
 
-            <!-- Button End Game -->
+            <!-- In Game Master Option -->
+            <div id="ruoli" class="p-5 text-white option-master fs-2">
+
+
+                <!-- Lupo -->
+                <div class="row row-cols-2 g-3 mb-3 align-items-center">
+                    <div class="col-6 form-check d-flex justify-content-center">
+                        <label class="form-check-label" for="Lupo">
+                            Lupo
+                        </label>
+                    </div>
+
+                    <div class="col-6">
+                        <select class="form-select fs-2" aria-label="Default select example" id="selecLupo">
+                            <option selected value="1">Uno</option>
+                            <option value="2">Due</option>
+                            <option value="3">Tre</option>
+                        </select>
+                    </div>
+
+                </div>
+                <!-- Investigatore -->
+                <div class="row row-cols-2 g-3 mb-3 align-items-center">
+                    <div class="col-6 form-check d-flex justify-content-center">
+                        <div class="form-check row">
+                            <input class="form-check-input" type="checkbox" value="" id="checkInvestigatore">
+                            <label class="form-check-label" for="checkInvestigatore">
+                                Investigatore
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="col-6">
+                        <select class="form-select fs-2" aria-label="Default select example" id="selecInvestigatore" Disabled>
+                            <option selected value="1">Uno</option>
+                            <option value="2">Due</option>
+                            <option value="3">Tre</option>
+                        </select>
+                    </div>
+
+                </div>
+
+                <!-- Puttana -->
+                <div class="row row-cols-2 g-3 mb-3 align-items-center">
+                    <div class="col-6 form-check d-flex justify-content-center">
+                        <div class="form-check row">
+                            <input class="form-check-input" type="checkbox" value="" id="checkPuttana">
+                            <label class="form-check-label" for="checkPuttana">
+                                Puttana
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="col-6">
+                        <select class="form-select fs-2" aria-label="Default select example" id="selecPuttana" Disabled>
+                            <option selected value="1">Uno</option>
+                            <option value="2">Due</option>
+                            <option value="3">Tre</option>
+                        </select>
+                    </div>
+
+                </div>
+
+                <!--  Cittadino Maledetto -->
+                <div class="row row-cols-2 g-3 mb-3 align-items-center">
+                    <div class="col-6 form-check d-flex justify-content-center">
+                        <div class="form-check row">
+                            <input class="form-check-input" type="checkbox" value="" id="checkCittadinoMaledetto">
+                            <label class="form-check-label" for="checkCittadinoMaledetto">
+                                Cittadino Maledetto
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="col-6">
+                        <select class="form-select fs-2" aria-label="Default select example" id="selecCittadinoMaledetto" Disabled>
+                            <option selected value="1">Uno</option>
+                            <option value="2">Due</option>
+                            <option value="3">Tre</option>
+                        </select>
+                    </div>
+
+                </div>
+
+                <!--   Pistolero -->
+                <div class="row row-cols-2 g-3 mb-3 align-items-center">
+                    <div class="col-6 form-check d-flex justify-content-center">
+                        <div class="form-check row">
+                            <input class="form-check-input" type="checkbox" value="" id="checkPistolero">
+                            <label class="form-check-label" for="checkPistolero">
+                                Pistolero
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="col-6">
+                        <select class="form-select fs-2" aria-label="Default select example" id="selecPistolero" Disabled>
+                            <option selected value="1">Uno</option>
+                            <option value="2">Due</option>
+                            <option value="3">Tre</option>
+                        </select>
+                    </div>
+
+                </div>
+
+                <!--   Cupido -->
+                <div class="row row-cols-2 g-3 mb-3 align-items-center">
+                    <div class="col-6 form-check d-flex justify-content-center">
+                        <div class="form-check row">
+                            <input class="form-check-input" type="checkbox" value="" id="checkCupido">
+                            <label class="form-check-label" for="checkCupido">
+                                Cupido
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="col-6">
+                        <select class="form-select fs-2" aria-label="Default select example" id="selecCupido" Disabled>
+                            <option selected value="1">Uno</option>
+                            <option value="2">Due</option>
+                            <option value="3">Tre</option>
+                        </select>
+                    </div>
+
+                </div>
+
+                <!--   Cittadino Normale -->
+                <div class="row row-cols-2 g-3 mb-3 align-items-center">
+                    <div class="col-6 form-check d-flex justify-content-center">
+                        <div class="form-check row">
+                            <input class="form-check-input" type="checkbox" value="" id="checkCittadinoNormale">
+                            <label class="form-check-label" for="checkCittadinoNormale">
+                                Cittadino Normale
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="col-6">
+                        <select class="form-select fs-2" aria-label="Default select example" id="selecCittadinoNormale" Disabled>
+                            <option selected value="1">Uno</option>
+                            <option value="2">Due</option>
+                            <option value="3">Tre</option>
+                        </select>
+                    </div>
+
+                </div>
+
+                <!-- Altri Personaggi in futuro -->
+
+
+            </div>
+
+
+
             <center>
-                <input type="button" id="btnEndGame" value="Termina" class="btn btn-success mt-5  btn-lg " style='background-color:#4f0097; border-color: #4f0097;' />
             </center>
+            <!-- Button End Game -->
+            <input type="button" id="btnEndGame" value="Termina" class="btn btn-success mt-5  btn-lg " style='background-color:#4f0097; border-color: #4f0097;' />
+
+            <!-- Generate Ruoli -->
+            <input type="button" id="btnGenerate" value="Genera Ruoli" class="btn btn-success mt-5 ms-4 btn-lg" style='width: 129px;float: right;' />
+
+
+
+
+            <!-- div admin game -->
         </div>
 
 

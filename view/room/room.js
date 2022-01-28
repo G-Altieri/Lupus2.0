@@ -6,9 +6,21 @@ jQuery(function() {
     var nickname;
     var admin;
     var numPlayer;
+    var numRuoli;
+    var preLobby = true;
     var lobby = false;
     var inGame = false;
     var generate = false;
+    var ruoli = {
+        "lupo": 0,
+        "investigatore": 0,
+        "puttana": 0,
+        "cittadinoMaledetto": 0,
+        "pistolero": 0,
+        "cupido": 0,
+        "cittadinoNormale": 0
+    };
+
 
     //Read room
     const queryString = window.location.href;
@@ -50,10 +62,43 @@ jQuery(function() {
 
     function joinInRoom() {
         errorView(false);
+        generate = false;
         lobby = true;
+        inGame = false;
+        preLobby = false;
         changeView(['inputNickName'], '');
         console.log("Join in room: " + room);
     }
+
+    //Listen Init Game
+    socket.on("initGame", (x) => {
+        console.log("Init Game");
+        if (!preLobby) {
+            inGame = true;
+            lobby = false;
+            generate = false;
+        }
+    });
+
+    //Listen End Game
+    socket.on("endGame", (x) => {
+        if (!preLobby) {
+            generate = false;
+            lobby = true;
+            inGame = false;
+        }
+        console.log("End Game");
+    });
+
+    //List of Users with ruoli generati
+    socket.on("ruoli generati ok", (x) => {
+        if (!preLobby) {
+            generate = true;
+            lobby = false;
+            inGame = false;
+        }
+        renderView(x.players, x.ruoli);
+    });
 
     //List of Users
     socket.on("UsersInRoom", (dataSocket) => {
@@ -63,7 +108,6 @@ jQuery(function() {
         numPlayer = dataSocket.length;
         renderView(dataSocket);
     });
-
 
     //Error 
     socket.on("error", (err) => {
@@ -100,6 +144,16 @@ jQuery(function() {
         }
     });
 
+    //Generate Ruoli
+    $("#btnGenerate").on('click', function() {
+        if ((numPlayer - 1) != numRuoli) {
+            errorView(true, "Il numero di ruoli e di player sono diversi");
+        } else {
+            errorView(false);
+            socket.emit("generate ruoli", ruoli);
+        }
+    });
+
     //Start GAME
     $('#btnInitGame').on("click", function() {
         socket.emit("initGame", {
@@ -111,18 +165,6 @@ jQuery(function() {
         socket.emit("endGame", {
             room: room
         });
-    });
-
-    //Listen Init Game
-    socket.on("initGame", (x) => {
-        console.log("Init Game");
-        inGame = true;
-    });
-
-    //Listen End Game
-    socket.on("endGame", (x) => {
-        inGame = false;
-        console.log("End Game");
     });
 
 
@@ -147,7 +189,7 @@ jQuery(function() {
         }
     }
     //Render Admin
-    function renderView(dataSocket) {
+    function renderView(dataSocket, ruoli) {
         if (lobby) {
             if (admin == nickname) {
                 var users = "";
@@ -172,11 +214,9 @@ jQuery(function() {
                 }
                 changeView(['inGameAdmin', 'trAdmin', 'adminView', 'btnInitGame'], ['progress', 'lobby', 'numPlayers']);
             }
-
         } else {
 
         } //lobby
-
 
         if (inGame) {
             if (admin == nickname) {
@@ -200,20 +240,181 @@ jQuery(function() {
                         users = users + '<li>' + x.nickname + '</li>';
                 });
             }
-            //Rendere Narratore
+
+            //Render Generale
+            controllCheckboxRuoli()
+            renderNumberRuoli()
             $('#inGameAdmin').html('<div style="background-color: rgb(0 121 225 / 60%);border-radius: 25px;"><i class="fa fa-user-astronaut  mx-4" style="color:red;"></i>Narratore &nbsp; &nbsp; ➜ &nbsp; &nbsp; ' + admin + "</div>");
         } else {
-            $('#inGameAdmin').html('');
+            // $('#inGameAdmin').html('');
         } //inGame
+
+        if (generate) {
+            if (admin == nickname) {
+                changeView(['btnInitGame', 'progress', 'adminView'], ['inGameAdmin', 'trAdmin', 'numPlayers']);
+            } else {
+                changeView(['btnInitGame', 'progress', 'adminView'], ['inGameAdmin', 'trAdmin', 'numPlayers']);
+            }
+            //Rimuove l admin dal render generale
+            var i = dataSocket.indexOf(dataSocket.find(element => {
+                return element.nickname == admin
+            }));
+            if (i != -1)
+                dataSocket.splice(i, 1);
+            //Elenco Player 
+            var users = "";
+            if (dataSocket != undefined) {
+                dataSocket.forEach(x => {
+                    if (x.nickname === nickname)
+                        users = users + '<li class="bg-success">' + x.nickname + '</li>';
+                    else
+                        users = users + '<li>' + x.nickname + '</li>';
+                });
+            }
+
+            console.log("generate")
+            console.log(dataSocket.nickname)
+            console.log(ruoli)
+            $('#inGameAdmin').html('<div style="background-color: rgb(0 121 225 / 60%);border-radius: 25px;"><i class="fa fa-user-astronaut  mx-4" style="color:red;"></i>Narratore &nbsp; &nbsp; ➜ &nbsp; &nbsp; ' + admin + "</div>");
+
+
+        }
 
         $('#players').html(users);
         $('#numPlayers').html("Player: " + numPlayer);
     }
 
+    //GESTIONE INPUT RUOLI
+    /*Investigatore*/
+    $("#checkInvestigatore").on('click', function() {
+        if ($('#checkInvestigatore').is(":checked"))
+            $("#selecInvestigatore").removeAttr("Disabled");
+        else
+            $("#selecInvestigatore").attr("Disabled", "");
 
+        controllCheckboxRuoli();
+    });
 
+    /*Puttana*/
+    $("#checkPuttana").on('click', function() {
+        if ($('#checkPuttana').is(":checked"))
+            $("#selecPuttana").removeAttr("Disabled");
+        else
+            $("#selecPuttana").attr("Disabled", "");
 
+        controllCheckboxRuoli();
+    });
 
+    /*CittadinoMaledetto*/
+    $("#checkCittadinoMaledetto").on('click', function() {
+        if ($('#checkCittadinoMaledetto').is(":checked"))
+            $("#selecCittadinoMaledetto").removeAttr("Disabled");
+        else
+            $("#selecCittadinoMaledetto").attr("Disabled", "");
+
+        controllCheckboxRuoli();
+    });
+
+    /*Pistolero*/
+    $("#checkPistolero").on('click', function() {
+        if ($('#checkPistolero').is(":checked"))
+            $("#selecPistolero").removeAttr("Disabled");
+        else
+            $("#selecPistolero").attr("Disabled", "");
+
+        controllCheckboxRuoli();
+    });
+
+    /*Cupido*/
+    $("#checkCupido").on('click', function() {
+        if ($('#checkCupido').is(":checked"))
+            $("#selecCupido").removeAttr("Disabled");
+        else
+            $("#selecCupido").attr("Disabled", "");
+
+        controllCheckboxRuoli();
+    });
+
+    /*CittadinoNormale*/
+    $("#checkCittadinoNormale").on('click', function() {
+        if ($('#checkCittadinoNormale').is(":checked"))
+            $("#selecCittadinoNormale").removeAttr("Disabled");
+        else
+            $("#selecCittadinoNormale").attr("Disabled", "");
+
+        controllCheckboxRuoli();
+    });
+
+    /*Change Value Select Ruolo*/
+    $("#selecCittadinoNormale").change('click', function() {
+        controllCheckboxRuoli();
+    });
+    $("#selecCupido").change('click', function() {
+        controllCheckboxRuoli();
+    });
+    $("#selecCittadinoMaledetto").change('click', function() {
+        controllCheckboxRuoli();
+    });
+    $("#selecPuttana").change('click', function() {
+        controllCheckboxRuoli();
+    });
+    $("#selecLupo").change('click', function() {
+        controllCheckboxRuoli();
+    });
+    $("#selecInvestigatore").change('click', function() {
+        controllCheckboxRuoli();
+
+    });
+    $("#selecPistolero").change('click', function() {
+        controllCheckboxRuoli();
+    });
+
+    /*Funzione controllo valore ruoli*/
+    function controllCheckboxRuoli() {
+        //Lupo
+        ruoli["lupo"] = ($('#selecLupo').val());
+        //Investigatore
+        if ($('#checkInvestigatore').is(":checked"))
+            ruoli["investigatore"] = ($('#selecInvestigatore').val())
+        else
+            ruoli["investigatore"] = 0;
+        //Puttana
+        if ($('#checkPuttana').is(":checked"))
+            ruoli["puttana"] = ($('#selecPuttana').val())
+        else
+            ruoli["puttana"] = 0;
+        //Cittadino Maledetto
+        if ($('#checkCittadinoMaledetto').is(":checked"))
+            ruoli["cittadinoMaledetto"] = ($('#selecCittadinoMaledetto').val())
+        else
+            ruoli["cittadinoMaledetto"] = 0;
+        //Pistolero
+        if ($('#checkPistolero').is(":checked"))
+            ruoli["pistolero"] = ($('#selecPistolero').val())
+        else
+            ruoli["pistolero"] = 0;
+        //Cupido
+        if ($('#checkCupido').is(":checked"))
+            ruoli["cupido"] = ($('#selecCupido').val())
+        else
+            ruoli["cupido"] = 0;
+        //Cittadino Normale
+        if ($('#checkCittadinoNormale').is(":checked"))
+            ruoli["cittadinoNormale"] = ($('#selecCittadinoNormale').val())
+        else
+            ruoli["cittadinoNormale"] = 0;
+
+        renderNumberRuoli();
+    }
+
+    function renderNumberRuoli() {
+        numRuoli = 0;
+        for (var key in ruoli)
+            numRuoli = parseInt(ruoli[key]) + numRuoli;
+
+        //$('#numRuoli').html('Ruoli Selezionati: ' + numRuoli);
+        $('#numRuoli').html('Ruoli Selezionati: ' + numRuoli + '<div style="float: right;margin-right: 22px;">Necessari: ' + (numPlayer - 1) + "</div>");
+    }
     //ANIMATION
     //  Titolo Lupus
     var textWrapper = document.querySelector('.ml9 .letters');
