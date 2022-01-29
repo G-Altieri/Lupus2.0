@@ -11,18 +11,23 @@
     <meta name="author" content="@ElTronk">
 
     <!-- Socket IO -->
-    <script src="https://cdn.socket.io/4.4.1/socket.io.min.js" integrity="sha384-fKnu0iswBIqkjxrhQCTZ7qlLHOFEgNkRmK2vaO/LbTZSXdJfAu6ewRBdwHPhBo/H" crossorigin="anonymous">
-    </script>
+    <script src="https://cdn.socket.io/4.4.1/socket.io.min.js"
+        integrity="sha384-fKnu0iswBIqkjxrhQCTZ7qlLHOFEgNkRmK2vaO/LbTZSXdJfAu6ewRBdwHPhBo/H" crossorigin="anonymous">
+        </script>
 
     <!-- JQUERY -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 
     <!-- BOOTSTRAP 5 -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
     <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> -->
 
     <!-- FONT -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+        integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w=="
+        crossorigin="anonymous" />
 
     <!---ICON-->
     <link rel="icon" href="./assets/img/favicon.png">
@@ -54,7 +59,8 @@
 
         <!-- Input NickName -->
         <div id="inputNickName">
-            <input type="text" class="form-control w-75 mx-auto fs-1" style="padding: 2rem; " id="nickname" placeholder="nickname" />
+            <input type="text" class="form-control w-75 mx-auto fs-1" style="padding: 2rem; " id="nickname"
+                placeholder="nickname" />
             <div class="d-flex justify-content-center mt-5">
                 <input type="button" class="btn btn-primary fs-1" id="entra" value="Entra" />
             </div>
@@ -76,7 +82,8 @@
 
         <!-- Admin view button init-->
         <center>
-            <input type="button" id="btnInitGame" value="inizia" class="btn btn-success mt-5  btn-lg hidden" style='background-color:#4f0097; border-color: #4f0097;' />
+            <input type="button" id="btnInitGame" value="inizia" class="btn btn-success mt-5  btn-lg hidden"
+                style='background-color:#4f0097; border-color: #4f0097;' />
         </center>
 
         <!-- Progess Spinener Lobby-->
@@ -124,7 +131,8 @@
                     </div>
 
                     <div class="col-6">
-                        <select class="form-select fs-2" aria-label="Default select example" id="selecInvestigatore" Disabled>
+                        <select class="form-select fs-2" aria-label="Default select example" id="selecInvestigatore"
+                            Disabled>
                             <option selected value="1">Uno</option>
                             <option value="2">Due</option>
                             <option value="3">Tre</option>
@@ -166,7 +174,8 @@
                     </div>
 
                     <div class="col-6">
-                        <select class="form-select fs-2" aria-label="Default select example" id="selecCittadinoMaledetto" Disabled>
+                        <select class="form-select fs-2" aria-label="Default select example"
+                            id="selecCittadinoMaledetto" Disabled>
                             <option selected value="1">Uno</option>
                             <option value="2">Due</option>
                             <option value="3">Tre</option>
@@ -187,7 +196,8 @@
                     </div>
 
                     <div class="col-6">
-                        <select class="form-select fs-2" aria-label="Default select example" id="selecPistolero" Disabled>
+                        <select class="form-select fs-2" aria-label="Default select example" id="selecPistolero"
+                            Disabled>
                             <option selected value="1">Uno</option>
                             <option value="2">Due</option>
                             <option value="3">Tre</option>
@@ -229,7 +239,8 @@
                     </div>
 
                     <div class="col-6">
-                        <select class="form-select fs-2" aria-label="Default select example" id="selecCittadinoNormale" Disabled>
+                        <select class="form-select fs-2" aria-label="Default select example" id="selecCittadinoNormale"
+                            Disabled>
                             <option selected value="1">Uno</option>
                             <option value="2">Due</option>
                             <option value="3">Tre</option>
@@ -245,20 +256,24 @@
 
 
 
-            <center>
-            </center>
             <!-- Button End Game -->
-            <input type="button" id="btnEndGame" value="Termina" class="btn btn-success mt-5  btn-lg " style='background-color:#4f0097; border-color: #4f0097;' />
+            <input type="button" id="btnEndGame" value="Termina" class="btn btn-success mt-5  btn-lg "
+                style='background-color:#4f0097; border-color: #4f0097;' />
 
             <!-- Generate Ruoli -->
-            <input type="button" id="btnGenerate" value="Genera Ruoli" class="btn btn-success mt-5 ms-4 btn-lg" style='width: 129px;float: right;' />
+            <input type="button" id="btnGenerate" value="Genera Ruoli" class="btn btn-success mt-5 ms-4 btn-lg"
+                style='width: 129px;float: right;' />
 
 
 
 
             <!-- div admin game -->
         </div>
-
+        <center>
+            <!-- Button End Game -->
+            <input type="button" id="btnEndGame2" value="Termina" class="btn btn-success mt-5  btn-lg hidden"
+                style='background-color:#4f0097; border-color: #4f0097;' />
+        </center>
 
 
         <!-- BG -->

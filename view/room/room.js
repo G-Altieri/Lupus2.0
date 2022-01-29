@@ -1,5 +1,5 @@
 //console.log("Room js file");
-jQuery(function() {
+jQuery(function () {
 
     //variable
     var socket = io();
@@ -32,17 +32,17 @@ jQuery(function() {
     socket.on('connect', () => {
         console.log("Server Connected");
     })
-    $(document).ready(function() {
+    $(document).ready(function () {
         socket.emit("join", {
             roomID: room
         });
     });
 
     //Sent Nickname
-    $('#entra').on('click', function() {
+    $('#entra').on('click', function () {
         addNickname();
     });
-    $('#nickname').on('keypress', function(e) {
+    $('#nickname').on('keypress', function (e) {
         if (e.which == 13) {
             addNickname();
         }
@@ -145,7 +145,7 @@ jQuery(function() {
     });
 
     //Generate Ruoli
-    $("#btnGenerate").on('click', function() {
+    $("#btnGenerate").on('click', function () {
         if ((numPlayer - 1) != numRuoli) {
             errorView(true, "Il numero di ruoli e di player sono diversi");
         } else {
@@ -155,13 +155,18 @@ jQuery(function() {
     });
 
     //Start GAME
-    $('#btnInitGame').on("click", function() {
+    $('#btnInitGame').on("click", function () {
         socket.emit("initGame", {
             room: room
         });
     });
     //End GAME
-    $('#btnEndGame').on("click", function() {
+    $('#btnEndGame').on("click", function () {
+        socket.emit("endGame", {
+            room: room
+        });
+    });
+    $('#btnEndGame2').on("click", function () {
         socket.emit("endGame", {
             room: room
         });
@@ -201,7 +206,7 @@ jQuery(function() {
                             users = users + '<li class="position-relative"><i class="fa fa-crown position-absolute m-2 pe-auto" style="color:#f6ff00; left:50px;" id="' + x.nickname + '"></i>' + x.nickname + '<i class="fa fa-sign-out-alt position-absolute m-2" style="color:red; right:50px;"  id="' + x.nickname + '" ></i>' + '</li>';
                     });
                 }
-                changeView(['inGameAdmin', 'trAdmin', 'adminView'], ['btnInitGame', 'progress', 'lobby', 'numPlayers']);
+                changeView(['inGameAdmin', 'trAdmin', 'adminView','btnEndGame2'], ['btnInitGame', 'progress', 'lobby', 'numPlayers']);
             } else {
                 var users = "";
                 if (dataSocket != undefined) {
@@ -212,7 +217,7 @@ jQuery(function() {
                             users = users + '<li>' + x.nickname + '</li>';
                     });
                 }
-                changeView(['inGameAdmin', 'trAdmin', 'adminView', 'btnInitGame'], ['progress', 'lobby', 'numPlayers']);
+                changeView(['inGameAdmin', 'trAdmin', 'adminView', 'btnInitGame','btnEndGame2'], ['progress', 'lobby', 'numPlayers']);
             }
         } else {
 
@@ -220,9 +225,9 @@ jQuery(function() {
 
         if (inGame) {
             if (admin == nickname) {
-                changeView(['btnInitGame', 'progress'], ['inGameAdmin', 'trAdmin', 'adminView', 'numPlayers']);
+                changeView(['btnInitGame', 'progress','btnEndGame2'], ['inGameAdmin', 'trAdmin', 'adminView', 'numPlayers']);
             } else {
-                changeView(['btnInitGame', 'progress', 'adminView'], ['inGameAdmin', 'trAdmin', 'numPlayers']);
+                changeView(['btnInitGame', 'progress', 'adminView','btnEndGame2'], ['inGameAdmin', 'trAdmin', 'numPlayers']);
             }
             //Rimuove l admin dal render generale
             var i = dataSocket.indexOf(dataSocket.find(element => {
@@ -250,43 +255,50 @@ jQuery(function() {
         } //inGame
 
         if (generate) {
-            if (admin == nickname) {
-                changeView(['btnInitGame', 'progress', 'adminView'], ['inGameAdmin', 'trAdmin', 'numPlayers']);
-            } else {
-                changeView(['btnInitGame', 'progress', 'adminView'], ['inGameAdmin', 'trAdmin', 'numPlayers']);
-            }
             //Rimuove l admin dal render generale
+            dataSocket.splice(0, 1);
             var i = dataSocket.indexOf(dataSocket.find(element => {
                 return element.nickname == admin
             }));
             if (i != -1)
                 dataSocket.splice(i, 1);
-            //Elenco Player 
-            var users = "";
-            if (dataSocket != undefined) {
-                dataSocket.forEach(x => {
-                    if (x.nickname === nickname)
-                        users = users + '<li class="bg-success">' + x.nickname + '</li>';
-                    else
-                        users = users + '<li>' + x.nickname + '</li>';
-                });
+
+            if (admin == nickname) {
+                changeView(['btnInitGame', 'progress', 'adminView'], ['inGameAdmin', 'trAdmin', 'numPlayers','btnEndGame2']);
+                //Elenco Player 
+                var users = "";
+                if (dataSocket != undefined) {
+                    dataSocket.forEach((x, i) => {
+                        if (x.nickname === nickname)
+                            users = users + '<li class="bg-success">' + x.nickname + '&nbsp; &nbsp; ➜ &nbsp; &nbsp; ' + ruoli[i] + '</li>';
+                        else
+                            users = users + '<li>' + x.nickname + '&nbsp; &nbsp; ➜ &nbsp; &nbsp; ' + ruoli[i] + '</li>';
+                    });
+                }
+            } else {
+                changeView(['btnInitGame', 'progress', 'adminView','btnEndGame2'], ['inGameAdmin', 'trAdmin', 'numPlayers']);
+                //Elenco Player 
+                var users = "";
+                if (dataSocket != undefined) {
+                    dataSocket.forEach((x, i) => {
+                        if (x.nickname === nickname)
+                            users = users + '<li class="bg-success">' + x.nickname + '&nbsp; &nbsp; ➜ &nbsp; &nbsp; ' + ruoli[i] + '</li>';
+                        else
+                            users = users + '<li>' + x.nickname + '</li>';
+                    });
+                }
             }
 
-            console.log("generate")
-            console.log(dataSocket.nickname)
-            console.log(ruoli)
             $('#inGameAdmin').html('<div style="background-color: rgb(0 121 225 / 60%);border-radius: 25px;"><i class="fa fa-user-astronaut  mx-4" style="color:red;"></i>Narratore &nbsp; &nbsp; ➜ &nbsp; &nbsp; ' + admin + "</div>");
 
-
         }
-
         $('#players').html(users);
         $('#numPlayers').html("Player: " + numPlayer);
     }
 
     //GESTIONE INPUT RUOLI
     /*Investigatore*/
-    $("#checkInvestigatore").on('click', function() {
+    $("#checkInvestigatore").on('click', function () {
         if ($('#checkInvestigatore').is(":checked"))
             $("#selecInvestigatore").removeAttr("Disabled");
         else
@@ -296,7 +308,7 @@ jQuery(function() {
     });
 
     /*Puttana*/
-    $("#checkPuttana").on('click', function() {
+    $("#checkPuttana").on('click', function () {
         if ($('#checkPuttana').is(":checked"))
             $("#selecPuttana").removeAttr("Disabled");
         else
@@ -306,7 +318,7 @@ jQuery(function() {
     });
 
     /*CittadinoMaledetto*/
-    $("#checkCittadinoMaledetto").on('click', function() {
+    $("#checkCittadinoMaledetto").on('click', function () {
         if ($('#checkCittadinoMaledetto').is(":checked"))
             $("#selecCittadinoMaledetto").removeAttr("Disabled");
         else
@@ -316,7 +328,7 @@ jQuery(function() {
     });
 
     /*Pistolero*/
-    $("#checkPistolero").on('click', function() {
+    $("#checkPistolero").on('click', function () {
         if ($('#checkPistolero').is(":checked"))
             $("#selecPistolero").removeAttr("Disabled");
         else
@@ -326,7 +338,7 @@ jQuery(function() {
     });
 
     /*Cupido*/
-    $("#checkCupido").on('click', function() {
+    $("#checkCupido").on('click', function () {
         if ($('#checkCupido').is(":checked"))
             $("#selecCupido").removeAttr("Disabled");
         else
@@ -336,7 +348,7 @@ jQuery(function() {
     });
 
     /*CittadinoNormale*/
-    $("#checkCittadinoNormale").on('click', function() {
+    $("#checkCittadinoNormale").on('click', function () {
         if ($('#checkCittadinoNormale').is(":checked"))
             $("#selecCittadinoNormale").removeAttr("Disabled");
         else
@@ -346,26 +358,26 @@ jQuery(function() {
     });
 
     /*Change Value Select Ruolo*/
-    $("#selecCittadinoNormale").change('click', function() {
+    $("#selecCittadinoNormale").change('click', function () {
         controllCheckboxRuoli();
     });
-    $("#selecCupido").change('click', function() {
+    $("#selecCupido").change('click', function () {
         controllCheckboxRuoli();
     });
-    $("#selecCittadinoMaledetto").change('click', function() {
+    $("#selecCittadinoMaledetto").change('click', function () {
         controllCheckboxRuoli();
     });
-    $("#selecPuttana").change('click', function() {
+    $("#selecPuttana").change('click', function () {
         controllCheckboxRuoli();
     });
-    $("#selecLupo").change('click', function() {
+    $("#selecLupo").change('click', function () {
         controllCheckboxRuoli();
     });
-    $("#selecInvestigatore").change('click', function() {
+    $("#selecInvestigatore").change('click', function () {
         controllCheckboxRuoli();
 
     });
-    $("#selecPistolero").change('click', function() {
+    $("#selecPistolero").change('click', function () {
         controllCheckboxRuoli();
     });
 
@@ -426,8 +438,8 @@ jQuery(function() {
 
 
     anime.timeline({
-            loop: false
-        }) /*Title*/
+        loop: false
+    }) /*Title*/
         .add({
             targets: '.ml9 .letter',
             scale: [0, 1],
@@ -436,47 +448,47 @@ jQuery(function() {
             delay: (el, i) => 45 * (i + 1)
         })
 
-    /*BG*/
-    .add({
-        targets: '#bg',
-        translateX: '-50%',
-        translateY: [-60, 0],
-        opacity: [0, 1],
-        easing: "easeOutExpo",
-        duration: 1000,
-        delay: 0,
-        begin: function() {
-            $('#bg').removeClass("opacity0");
-        },
-    }, '1500')
+        /*BG*/
+        .add({
+            targets: '#bg',
+            translateX: '-50%',
+            translateY: [-60, 0],
+            opacity: [0, 1],
+            easing: "easeOutExpo",
+            duration: 1000,
+            delay: 0,
+            begin: function () {
+                $('#bg').removeClass("opacity0");
+            },
+        }, '1500')
 
-    /*Mandria*/
-    .add({
-        targets: '.ml12 .letter',
-        scale: [14, 1],
-        opacity: [0, 1],
-        easing: "easeOutCirc",
-        duration: 400,
-        delay: (el, i) => 400 * i,
-        begin: function() {
-            $('.ml12').removeClass("opacity0");
-        },
-    }, '1000')
+        /*Mandria*/
+        .add({
+            targets: '.ml12 .letter',
+            scale: [14, 1],
+            opacity: [0, 1],
+            easing: "easeOutCirc",
+            duration: 400,
+            delay: (el, i) => 400 * i,
+            begin: function () {
+                $('.ml12').removeClass("opacity0");
+            },
+        }, '1000')
 
-    /*Foglia*/
-    .add({
-        targets: '.iconLeaf',
-        translateX: [60, 0],
-        translateZ: 0,
-        rotate: '50deg',
-        opacity: [0, 1],
-        easing: "easeOutExpo",
-        duration: 2000,
-        delay: 0,
-        begin: function() {
-            $('.iconLeaf').removeClass("opacity0");
-        },
-    }, '1500')
+        /*Foglia*/
+        .add({
+            targets: '.iconLeaf',
+            translateX: [60, 0],
+            translateZ: 0,
+            rotate: '50deg',
+            opacity: [0, 1],
+            easing: "easeOutExpo",
+            duration: 2000,
+            delay: 0,
+            begin: function () {
+                $('.iconLeaf').removeClass("opacity0");
+            },
+        }, '1500')
 
 
 

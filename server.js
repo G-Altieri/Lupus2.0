@@ -161,7 +161,7 @@ io.on("connection", (socket) => {
         }
 
         var players = await listUsersInRoom(socket.data.roomID, true);
-        console.log(players)
+        //console.log(players)
         console.log("Ruoli generati per la room: " + socket.data.roomID);
         io.to(socket.data.roomID).emit("ruoli generati ok", {
             ruoli: listTemp,
