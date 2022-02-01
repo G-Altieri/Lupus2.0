@@ -9,7 +9,7 @@ import path from "path";
 
 //variable Exspress
 const app = express();
-const port = process.env.PORT || 80;
+const port = process.env.PORT || 80;//process.env.PORT || 80 //3000
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
     /* options */

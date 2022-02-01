@@ -206,7 +206,7 @@ jQuery(function () {
                             users = users + '<li class="position-relative"><i class="fa fa-crown position-absolute m-2 pe-auto" style="color:#f6ff00; left:50px;" id="' + x.nickname + '"></i>' + x.nickname + '<i class="fa fa-sign-out-alt position-absolute m-2" style="color:red; right:50px;"  id="' + x.nickname + '" ></i>' + '</li>';
                     });
                 }
-                changeView(['inGameAdmin', 'trAdmin', 'adminView','btnEndGame2'], ['btnInitGame', 'progress', 'lobby', 'numPlayers']);
+                changeView(['inGameAdmin', 'trAdmin', 'adminView','btnEndGame2'], ['btnInitGame', 'progress', 'lobby', 'numPlayers','btnShare']);
             } else {
                 var users = "";
                 if (dataSocket != undefined) {
@@ -217,7 +217,7 @@ jQuery(function () {
                             users = users + '<li>' + x.nickname + '</li>';
                     });
                 }
-                changeView(['inGameAdmin', 'trAdmin', 'adminView', 'btnInitGame','btnEndGame2'], ['progress', 'lobby', 'numPlayers']);
+                changeView(['inGameAdmin', 'trAdmin', 'adminView', 'btnInitGame','btnEndGame2'], ['progress', 'lobby', 'numPlayers','btnShare']);
             }
         } else {
 
@@ -225,9 +225,9 @@ jQuery(function () {
 
         if (inGame) {
             if (admin == nickname) {
-                changeView(['btnInitGame', 'progress','btnEndGame2'], ['inGameAdmin', 'trAdmin', 'adminView', 'numPlayers']);
+                changeView(['btnInitGame', 'progress','btnEndGame2','btnShare'], ['inGameAdmin', 'trAdmin', 'adminView', 'numPlayers']);
             } else {
-                changeView(['btnInitGame', 'progress', 'adminView','btnEndGame2'], ['inGameAdmin', 'trAdmin', 'numPlayers']);
+                changeView(['btnInitGame', 'progress', 'adminView','btnEndGame2','btnShare'], ['inGameAdmin', 'trAdmin', 'numPlayers']);
             }
             //Rimuove l admin dal render generale
             var i = dataSocket.indexOf(dataSocket.find(element => {
@@ -264,7 +264,7 @@ jQuery(function () {
                 dataSocket.splice(i, 1);
 
             if (admin == nickname) {
-                changeView(['btnInitGame', 'progress', 'adminView'], ['inGameAdmin', 'trAdmin', 'numPlayers','btnEndGame2']);
+                changeView(['btnInitGame', 'progress', 'adminView','btnShare'], ['inGameAdmin', 'trAdmin', 'numPlayers','btnEndGame2']);
                 //Elenco Player 
                 var users = "";
                 if (dataSocket != undefined) {
@@ -276,7 +276,7 @@ jQuery(function () {
                     });
                 }
             } else {
-                changeView(['btnInitGame', 'progress', 'adminView','btnEndGame2'], ['inGameAdmin', 'trAdmin', 'numPlayers']);
+                changeView(['btnInitGame', 'progress', 'adminView','btnEndGame2','btnShare'], ['inGameAdmin', 'trAdmin', 'numPlayers']);
                 //Elenco Player 
                 var users = "";
                 if (dataSocket != undefined) {
@@ -427,6 +427,21 @@ jQuery(function () {
         //$('#numRuoli').html('Ruoli Selezionati: ' + numRuoli);
         $('#numRuoli').html('Ruoli Selezionati: ' + numRuoli + '<div style="float: right;margin-right: 22px;">Necessari: ' + (numPlayer - 1) + "</div>");
     }
+
+
+    $("#btnShare").on('click', async function () {
+        try {
+          await navigator.share({
+            title: "Lupus in Tabula",
+            text: "Unisciti per una partita a Lupus ;)",
+            url: "/room/"+room,
+          });
+         console.log("shared successfully");
+        } catch (err) {
+           console.log("Error: " + err);
+        }
+      });
+
     //ANIMATION
     //  Titolo Lupus
     var textWrapper = document.querySelector('.ml9 .letters');

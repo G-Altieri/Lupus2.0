@@ -202,3 +202,34 @@ textarea:-webkit-autofill:focus,
 .fa {
     cursor: pointer;
 }
+
+
+.share{
+    right: 0px;
+}
+
+@media (min-width: 576px) { 
+    .share{
+        right: 0px;
+    }
+ }
+
+
+@media (min-width: 768px) { 
+    .share{
+    right: 15px;
+}}
+
+@media (min-width: 992px) {
+    .share{
+    right: 30px;
+} }
+
+
+@media (min-width: 1200px) { 
+    .share{
+    right: 40px;
+} }
+
+@media (min-width: 1400px) {  }
+
